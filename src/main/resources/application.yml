@@ -1,0 +1,11 @@
+# 应用服务 WEB 访问端口
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/flowable-spring-boot?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: password
+flowable:
+  #关闭定时任务JOB
+  async-executor-activate: false
+

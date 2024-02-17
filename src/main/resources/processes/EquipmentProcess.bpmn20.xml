@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="Equipment" name="EquipmentProcess" isExecutable="true">
+    <startEvent id="start" name="开始"/>
+    <exclusiveGateway id="judgeTask" name="判断由哪个领导审批"/>
+    <endEvent id="end" name="结束"/>
+    <sequenceFlow id="flow2" sourceRef="officerTask" targetRef="judgeTask"/>
+    <sequenceFlow id="flow1" sourceRef="start" targetRef="officerTask"/>
+    <sequenceFlow id="judgeMore" sourceRef="judgeTask" targetRef="bossTask" name="超过500元">
+      <conditionExpression xsi:type="tFormalExpression">${money&gt;500}</conditionExpression>
+    </sequenceFlow>
+    <userTask id="bossTask" name="boss审批"/>
+    <sequenceFlow id="bossPassFlow" sourceRef="bossTask" targetRef="end" name="通过">
+      <conditionExpression xsi:type="tFormalExpression">${outcome=='通过'}</conditionExpression>
+    </sequenceFlow>
+    <userTask id="managerTask" name="经理审批"/>
+    <sequenceFlow id="judgeLess" sourceRef="judgeTask" targetRef="managerTask" name="小于500元">
+      <conditionExpression xsi:type="tFormalExpression">${money&lt;=500}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="managerPassFlow" sourceRef="managerTask" targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression">${outcome=='通过'}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="managerNotPassFlow" sourceRef="managerTask" targetRef="officerTask" name="驳回">
+      <conditionExpression>${outcome=='驳回'}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="bossNotPassFlow" sourceRef="bossTask" targetRef="officerTask" name="驳回">
+      <conditionExpression>${outcome=='驳回'}</conditionExpression>
+    </sequenceFlow>
+    <userTask id="officerTask" name="采购申请" activiti:assignee="${taskUser}"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_EquipmentProcess">
+    <bpmndi:BPMNPlane bpmnElement="Equipment" id="BPMNPlane_EquipmentProcess">
+      <bpmndi:BPMNShape id="shape-f2e47eda-5702-4fee-a901-1e0389b51829" bpmnElement="start">
+        <omgdc:Bounds x="-340.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-254a380c-285c-466a-9062-ee6a2f941be5" bpmnElement="judgeTask">
+        <omgdc:Bounds x="-95.0" y="-20.0" width="40.0" height="40.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-fe5a2a77-5dd5-46ff-a0e3-608d183731a5" bpmnElement="end">
+        <omgdc:Bounds x="210.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-e4142c1a-7b95-4f91-ad13-fa87ec9c9410" bpmnElement="flow2">
+        <omgdi:waypoint x="-155.0" y="1.4901161E-8"/>
+        <omgdi:waypoint x="-95.0" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-4ae876d8-96b3-4e53-bf46-77ca7caeef8f" bpmnElement="flow1">
+        <omgdi:waypoint x="-310.0" y="0.0"/>
+        <omgdi:waypoint x="-255.0" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-ce0bb822-0cc9-48ef-87bf-668d94e85674" bpmnElement="judgeMore">
+        <omgdi:waypoint x="-75.0" y="-19.999998"/>
+        <omgdi:waypoint x="-15.0" y="-80.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-d9ac15f6-4ab6-46d5-b7fd-96f1ba47c37c" bpmnElement="bossTask">
+        <omgdc:Bounds x="-15.0" y="-120.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-c094af69-b02f-45f9-bebf-c23194c44615" bpmnElement="bossPassFlow">
+        <omgdi:waypoint x="85.0" y="-100.0"/>
+        <omgdi:waypoint x="210.0" y="-7.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-c8af9e82-ee13-408b-b7f1-f071e592a71c" bpmnElement="managerTask">
+        <omgdc:Bounds x="-15.0" y="45.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-488e51ab-f20a-43a3-921b-c17403610292" bpmnElement="judgeLess">
+        <omgdi:waypoint x="-75.0" y="20.000002"/>
+        <omgdi:waypoint x="-75.0" y="85.0"/>
+        <omgdi:waypoint x="-15.0" y="84.99999"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-8916d42a-7c8d-410e-82d3-acdaf6fc163e" bpmnElement="managerPassFlow">
+        <omgdi:waypoint x="85.0" y="65.0"/>
+        <omgdi:waypoint x="210.0" y="7.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-1934abca-8c19-4d4a-a4fc-da8af0a2c0cc" bpmnElement="managerNotPassFlow">
+        <omgdi:waypoint x="35.0" y="125.0"/>
+        <omgdi:waypoint x="35.0" y="149.37498"/>
+        <omgdi:waypoint x="-205.00002" y="149.37497"/>
+        <omgdi:waypoint x="-205.0" y="40.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-96036dd5-4075-434b-9dbe-da3a17e65144" bpmnElement="bossNotPassFlow">
+        <omgdi:waypoint x="35.0" y="-120.0"/>
+        <omgdi:waypoint x="35.0" y="-153.75"/>
+        <omgdi:waypoint x="-205.0" y="-153.75"/>
+        <omgdi:waypoint x="-205.00002" y="-39.999996"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-bc0f6424-1ced-401f-ba7f-6906d5710a50" bpmnElement="officerTask">
+        <omgdc:Bounds x="-255.0" y="-40.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
