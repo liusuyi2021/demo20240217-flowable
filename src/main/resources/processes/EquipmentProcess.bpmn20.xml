@@ -17,7 +17,7 @@
     <sequenceFlow id="judgeLess" sourceRef="judgeTask" targetRef="managerTask" name="小于500元">
       <conditionExpression xsi:type="tFormalExpression">${money&lt;=500}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="managerPassFlow" sourceRef="managerTask" targetRef="end">
+    <sequenceFlow id="managerPassFlow" sourceRef="managerTask" targetRef="end" name="通过">
       <conditionExpression xsi:type="tFormalExpression">${outcome=='通过'}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="managerNotPassFlow" sourceRef="managerTask" targetRef="officerTask" name="驳回">
@@ -63,7 +63,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge-488e51ab-f20a-43a3-921b-c17403610292" bpmnElement="judgeLess">
         <omgdi:waypoint x="-75.0" y="20.000002"/>
-        <omgdi:waypoint x="-75.0" y="85.0"/>
+        <omgdi:waypoint x="-40.0" y="60.0"/>
         <omgdi:waypoint x="-15.0" y="84.99999"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge-8916d42a-7c8d-410e-82d3-acdaf6fc163e" bpmnElement="managerPassFlow">
