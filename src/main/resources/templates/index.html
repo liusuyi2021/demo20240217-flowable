@@ -62,6 +62,15 @@
                 <!--            </table>-->
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="deployId" class="form-control" placeholder="请输入部署ID">
+                <input type="text" id="deployName" class="form-control" placeholder="请输入部署名称">
+                <button id="createDeployment" type="button" class="btn btn-primary">部署流程</button>
+                <button id="deleteDeployment" type="button" class="btn btn-primary">删除流程</button>
+                <table id="deploymentTable"></table>
+            </div>
+        </div>
     </div>
 </div>
 </body>
@@ -90,6 +99,52 @@
                 sortable: true
             }]
         })
+        $("#deploymentTable").bootstrapTable({
+            url: "/equipment/deployList",  //请求地址
+            striped: true, //是否显示行间隔色
+            pageNumber: 1, //初始化加载第一页
+            pagination: true,//是否分页
+            sidePagination: 'client',//server:服务器端分页|client：前端分页
+            pageSize: 5,//单页记录数
+            pageList: [5, 10, 15],//可选择单页记录数
+            showRefresh: true,//刷新按钮
+            columns: [{
+                title: 'deploymentId',
+                field: 'deploymentId',
+                sortable: true
+            }, {
+                title: '流程名称',
+                field: 'name',
+                sortable: true
+            }]
+        })
+    })
+    $("#deleteDeployment").click(function () {
+      //ajax请求
+      $.ajax(
+          {
+              type: "POST",
+              url: "/equipment/deleteDeploy",
+              data: {
+                  "deployId": $("#deployId").val()
+              }
+          }
+      )
+    })
+    $("#createDeployment").click(function () {
+        //ajax请求
+        $.ajax(
+            {
+                type: "POST",
+                url: "/equipment/createDeploy",
+                data: {
+                    "name": $("#deployName").val()
+                },
+                success: function (data) {
+                    $("#deployId").val(data);
+                }
+            }
+        )
     })
 </script>
 </html>

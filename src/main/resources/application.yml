@@ -16,5 +16,6 @@ flowable:
   #关闭定时任务JOB
   async-executor-activate: false
   database-schema-update: true
+  check-process-definitions: false
 
 

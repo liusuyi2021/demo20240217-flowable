@@ -2,15 +2,14 @@ package com.example.controller;
 
 import com.example.domain.UserTask;
 import com.example.service.EquipmentService;
-import com.example.utils.AjaxResult;
+import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.repository.ProcessDefinition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,7 @@ import java.util.Map;
  * @Date: 2024年02月18日14:07:43
  **/
 @Controller
+@Slf4j
 @RequestMapping("/equipment")
 public class EquipmentController {
     @Resource
@@ -33,7 +33,12 @@ public class EquipmentController {
         model.addAttribute("userTasks", list);
         return "index";
     }
-
+    @PostMapping("/createDeploy")
+    @ResponseBody
+    public String createDeploy(String name) {
+        String deployId = equipmentService.createDeploy(name);
+        return deployId;
+    }
     @PostMapping("/add")
     public String addEquipment(@ModelAttribute("userTask") UserTask userTask, Model model) {
         if (userTask.getUserId() == null || userTask.getMoney() == null) {
@@ -47,7 +52,18 @@ public class EquipmentController {
         return "index";
     }
 
-    @RequestMapping("/list")
+    @PostMapping("/deleteDeploy")
+    public String deleteDeploy(String deployId) {
+        equipmentService.deleteDeploy(deployId);
+        return "redirect:/equipment/index";
+    }
+    @GetMapping("/deployList")
+    @ResponseBody
+    public List<Map<String, Object>> deployList(Model model) {
+        List<Map<String, Object>> processDefinitions = equipmentService.deployList();
+        return processDefinitions;
+    }
+    @GetMapping("/list")
     @ResponseBody
     public List<Map<String, Object>> list() {
         List<Map<String, Object>> list = equipmentService.list("111");

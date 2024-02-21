@@ -4,10 +4,13 @@ import com.example.service.EquipmentService;
 import com.example.utils.AjaxResult;
 import com.example.utils.CommUtil;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.*;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.history.HistoricProcessInstance;
+import org.flowable.engine.repository.ProcessDefinition;
+import org.flowable.engine.repository.ProcessDefinitionQuery;
 import org.flowable.engine.runtime.Execution;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.image.ProcessDiagramGenerator;
@@ -46,6 +49,30 @@ public class EquipmentServiceImpl implements EquipmentService {
     HistoryService historyService;
 
     @Override
+    public String createDeploy(String deployName) {
+        val deployment = repositoryService.createDeployment()
+                .addClasspathResource("processes/EquipmentProcess.bpmn20.xml")
+                .name(deployName)
+                .deploy();
+        return deployment.getId();
+    }
+    @Override
+    public void deleteDeploy(String deployId) {
+        repositoryService.deleteDeployment(deployId,true);
+    }
+    @Override
+    public List<Map<String, Object>> deployList() {
+        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().list();
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        String[] ps = {"deploymentId", "name"};
+        for (ProcessDefinition task : list) {
+            Map<String, Object> obj2map = CommUtil.obj2map(task, ps);
+            listMap.add(obj2map);
+        }
+        return listMap;
+    }
+
+    @Override
     public String addEquipment(String userId, Integer money) {
         //启动流程
         HashMap<String, Object> map = new HashMap<>();
@@ -55,6 +82,8 @@ public class EquipmentServiceImpl implements EquipmentService {
         ProcessInstanceMap.put(userId, processInstance);
         return "提交成功.流程Id为：" + processInstance.getId();
     }
+
+
 
     @Override
     public List<Map<String, Object>> list(String userId) {
